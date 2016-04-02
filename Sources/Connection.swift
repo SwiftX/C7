@@ -6,15 +6,9 @@
 //
 //
 
-public protocol Connection {
+public protocol Connection : Stream {
     
-    associatedtype StatusType
-    
+    var uri : URI? { get }
     func open() throws
-    func close() -> Bool
-    
-    var connectionInfo: ConnectionInfo { get }
-    var status: StatusType { get }
-    var mostRecentError: ErrorProtocol? { get }
 
 }
