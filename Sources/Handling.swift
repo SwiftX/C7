@@ -1,5 +1,5 @@
 public protocol Handling {
-    associatedType Event
+    associatedtype Event
     func handle(event: Event)
 }
 

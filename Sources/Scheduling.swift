@@ -1,5 +1,5 @@
 public protocol Scheduling {
-    associatedType Event
+    associatedtype Event
     func schedule(event: Event)
 }
 
