@@ -6,63 +6,67 @@
 #endif
 
 /// Milliseconds from January 1, 1970.
-public func now() -> Int64 {
+public func now() -> Double {
     #if os(Linux)
         var ts = timespec()
         clock_gettime(CLOCK_MONOTONIC, &ts)
-        return Int(ts.tv_sec) * 1000 + Int(ts.tv_nsec) / 1000000
-    #else
+        let milliseconds = Int(ts.tv_sec) * 1000 + Int(ts.tv_nsec) / 1000000
+        // TODO: Paulo, make better :)
+        return Double(milliseconds) / 1000
+     #else
         if mtid.denom == 0 {
             mach_timebase_info(&mtid)
         }
         let ticks = mach_absolute_time()
-        return Int64(ticks * UInt64(mtid.numer) / UInt64(mtid.denom) / 1000000)
+        let milliseconds = Int64(ticks * UInt64(mtid.numer) / UInt64(mtid.denom) / 1000000)
+        // TODO: Paulo, make better :)
+        return Double(milliseconds) / 1000
     #endif
 }
 
-extension Int64 {
+extension Double {
     /// Interval of `self` from now.
-    public func fromNow() -> Int64 {
+    public func fromNow() -> Double {
         return now() + self
     }
 }
 
 public protocol TimeRepresentor {
-    var milliseconds: Int64 { get }
+    var seconds: Double { get }
 }
 
 extension TimeRepresentor {
-    public var millisecond: Int64 {
-        return 1.milliseconds
+    public var millisecond: Double {
+        return 1.second * 1000
     }
-    public var second: Int64 {
-        return 1.millisecond * 1000
+    public var milliseconds: Double {
+        return self.seconds * 1000
     }
-    public var seconds: Int64 {
-        return self.milliseconds * 1000
+    public var second: Double {
+        return 1.seconds
     }
-    public var minute: Int64 {
+    public var minute: Double {
         return 1.second * 60
     }
-    public var minutes: Int64 {
+    public var minutes: Double {
         return self.seconds * 60
     }
-    public var hour: Int64 {
+    public var hour: Double {
         return 1.minute * 60
     }
-    public var hours: Int64 {
+    public var hours: Double {
         return self.minutes * 60
     }
 }
 
-extension Int: TimeRepresentor {
-    public var milliseconds: Int64 {
-        return self.toIntMax()
+extension Double: TimeRepresentor {
+    public var seconds: Double {
+        return self
     }
 }
 
-extension Int64 {
-    public static var never: Int64 {
+extension Double {
+    public static var never: Double {
         return -1
     }
 }
