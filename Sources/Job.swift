@@ -1,5 +1,5 @@
 public protocol Job {
-    var name: Stirng { get }
+    var name: String { get }
     func execute () throws
 }
 
