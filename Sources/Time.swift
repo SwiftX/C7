@@ -23,7 +23,7 @@ public func now() -> Int64 {
 extension Int64 {
     /// Interval of `self` from now.
     public func fromNow() -> Int64 {
-        return now() + Int64(self.toIntMax())
+        return now() + self
     }
 }
 
