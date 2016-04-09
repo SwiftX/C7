@@ -28,36 +28,36 @@ extension Int64 {
 }
 
 public protocol TimeRepresentor {
-    var millisecond: Int64 { get }
+    var milliseconds: Int64 { get }
 }
 
 extension TimeRepresentor {
-    public var milliseconds: Int64 {
-        return 1
+    public var millisecond: Int64 {
+        return 1.milliseconds
     }
     public var second: Int64 {
-        return millisecond * 1000
+        return 1.millisecond * 1000
     }
     public var seconds: Int64 {
-        return 1000
+        return self.milliseconds * 1000
     }
     public var minute: Int64 {
-        return millisecond * 60000
+        return 1.second * 60
     }
     public var minutes: Int64 {
-        return 60000
+        return self.seconds * 60
     }
     public var hour: Int64 {
-        return millisecond * 3600000
+        return 1.minute * 60
     }
     public var hours: Int64 {
-        return 3600000
+        return self.minutes * 60
     }
 }
 
 extension Int: TimeRepresentor {
-    public var millisecond: Int64 {
-        return Int64(self.toIntMax())
+    public var milliseconds: Int64 {
+        return self.toIntMax()
     }
 }
 
