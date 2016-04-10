@@ -21,8 +21,24 @@ extension Sending {
     }
 }
 
+extension Sending {
+    public func send(data: Data) throws {
+        try send(data, timingOut: .never)
+    }
+    
+    public func flush() throws {
+        try flush(timingOut: .never)
+    }
+}
+
 extension Receiving {
     public func receive(upTo byteCount: Int, timingOut deadline: Double, result: (Void throws -> Data) -> Void) {
         result { try self.receive(upTo: byteCount, timingOut: deadline) }
+    }
+}
+
+extension Receiving {
+    public func receive(upTo byteCount: Int) throws -> Data {
+        return try receive(upTo: byteCount, timingOut: .never)
     }
 }
