@@ -20,13 +20,13 @@ extension Query: DictionaryLiteralConvertible {
 
 extension Query: Sequence {
     #if swift(>=3.0)
-    public func makeIterator() -> DictionaryIterator<String, QueryField> {
-        return fields.makeIterator()
-    }
+        public func makeIterator() -> DictionaryIterator<String, QueryField> {
+            return fields.makeIterator()
+        }
     #else
-    public func generate() -> DictionaryGenerator<String, QueryField> {
-        return fields.generate()
-    }
+        public func generate() -> DictionaryGenerator<String, QueryField> {
+            return fields.generate()
+        }
     #endif
 
     public var count: Int {

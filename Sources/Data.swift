@@ -28,23 +28,23 @@ extension Data: RangeReplaceableCollection, MutableCollection {
     }
 
     #if swift(>=3.0)
-    public mutating func replaceSubrange<C : Collection where C.Iterator.Element == Byte>(subRange: Range<Int>, with newElements: C) {
-        self.bytes.replaceSubrange(subRange, with: newElements)
-    }
+        public mutating func replaceSubrange<C : Collection where C.Iterator.Element == Byte>(subRange: Range<Int>, with newElements: C) {
+            self.bytes.replaceSubrange(subRange, with: newElements)
+        }
     #else
-    public mutating func replaceRange<C : CollectionType where C.Generator.Element == Byte>(subRange: Range<Int>, with newElements: C) {
-        self.bytes.replaceRange(subRange, with: newElements)
-    }
+        public mutating func replaceRange<C : CollectionType where C.Generator.Element == Byte>(subRange: Range<Int>, with newElements: C) {
+            self.bytes.replaceRange(subRange, with: newElements)
+        }
     #endif
 
     #if swift(>=3.0)
-    public func makeIterator() -> IndexingIterator<[Byte]> {
-        return bytes.makeIterator()
-    }
+        public func makeIterator() -> IndexingIterator<[Byte]> {
+            return bytes.makeIterator()
+        }
     #else
-    public func generate() -> IndexingGenerator<[Byte]> {
-        return bytes.generate()
-    }
+        public func generate() -> IndexingGenerator<[Byte]> {
+            return bytes.generate()
+        }
     #endif
 
     public var startIndex: Int {
@@ -103,33 +103,33 @@ public func == (lhs: Data, rhs: Data) -> Bool {
 }
 
 #if swift(>=3.0)
-public func += <S : Sequence where S.Iterator.Element == Byte>(lhs: inout Data, rhs: S) {
-    return lhs.bytes += rhs
-}
+    public func += <S : Sequence where S.Iterator.Element == Byte>(lhs: inout Data, rhs: S) {
+        return lhs.bytes += rhs
+    }
 #else
-public func += <S : SequenceType where S.Generator.Element == Byte>(inout lhs: Data, rhs: S) {
-    return lhs.bytes += rhs
-}
+    public func += <S : SequenceType where S.Generator.Element == Byte>(inout lhs: Data, rhs: S) {
+        return lhs.bytes += rhs
+    }
 #endif
 
 #if swift(>=3.0)
-public func += (lhs: inout Data, rhs: Data) {
-    return lhs.bytes += rhs.bytes
-}
+    public func += (lhs: inout Data, rhs: Data) {
+        return lhs.bytes += rhs.bytes
+    }
 #else
-public func += (inout lhs: Data, rhs: Data) {
-    return lhs.bytes += rhs.bytes
-}
+    public func += (inout lhs: Data, rhs: Data) {
+        return lhs.bytes += rhs.bytes
+    }
 #endif
 
 #if swift(>=3.0)
-public func += (lhs: inout Data, rhs: DataConvertible) {
-    return lhs += rhs.data
-}
+    public func += (lhs: inout Data, rhs: DataConvertible) {
+        return lhs += rhs.data
+    }
 #else
-public func += (inout lhs: Data, rhs: DataConvertible) {
-    return lhs += rhs.data
-}
+    public func += (inout lhs: Data, rhs: DataConvertible) {
+        return lhs += rhs.data
+    }
 #endif
 
 @warn_unused_result
@@ -149,39 +149,39 @@ public func + (lhs: DataConvertible, rhs: Data) -> Data {
 
 extension String: DataConvertible {
     #if swift(>=3.0)
-    public init(data: Data) throws {
-        struct Error: ErrorProtocol {}
-        var string = ""
-        var decoder = UTF8()
-        var generator = data.makeIterator()
+        public init(data: Data) throws {
+            struct Error: ErrorProtocol {}
+            var string = ""
+            var decoder = UTF8()
+            var generator = data.makeIterator()
 
-        loop: while true {
-            switch decoder.decode(&generator) {
-            case .scalarValue(let char): string.append(char)
-            case .emptyInput: break loop
-            case .error: throw Error()
+            loop: while true {
+                switch decoder.decode(&generator) {
+                case .scalarValue(let char): string.append(char)
+                case .emptyInput: break loop
+                case .error: throw Error()
+                }
             }
-        }
 
-        self.init(string)
-    }
+            self.init(string)
+        }
     #else
-    public init(data: Data) throws {
-        struct Error: ErrorProtocol {}
-        var string = ""
-        var decoder = UTF8()
-        var generator = data.generate()
+        public init(data: Data) throws {
+            struct Error: ErrorProtocol {}
+            var string = ""
+            var decoder = UTF8()
+            var generator = data.generate()
 
-        loop: while true {
-            switch decoder.decode(&generator) {
-            case .Result(let char): string.append(char)
-            case .EmptyInput: break loop
-            case .Error: throw Error()
+            loop: while true {
+                switch decoder.decode(&generator) {
+                case .Result(let char): string.append(char)
+                case .EmptyInput: break loop
+                case .Error: throw Error()
+                }
             }
-        }
 
-        self.init(string)
-    }
+            self.init(string)
+        }
     #endif
 
     public var data: Data {
@@ -199,43 +199,43 @@ extension Data {
     }
 
     #if swift(>=3.0)
-    public static func bufferWithSize(size: Int) -> Data {
-        return Data([UInt8](repeating: 0, count: size))
-    }
+        public static func buffer(with size: Int) -> Data {
+            return Data([UInt8](repeating: 0, count: size))
+        }
     #else
-    public static func bufferWithSize(size: Int) -> Data {
-        return Data([UInt8](count: size, repeatedValue: 0))
-    }
+        public static func buffer(with size: Int) -> Data {
+            return Data([UInt8](count: size, repeatedValue: 0))
+        }
     #endif
 }
 
 extension Data {
     #if swift(>=3.0)
-    public func hexString(delimiter delimiter: Int = 0) -> String {
-        var string = ""
-        for (index, value) in self.enumerated() {
-            if delimiter != 0 && index > 0 && index % delimiter == 0 {
-                string += " "
+        public func hexadecimalString(inGroupsOf characterCount: Int = 0) -> String {
+            var string = ""
+            for (index, value) in self.enumerated() {
+                if characterCount != 0 && index > 0 && index % characterCount == 0 {
+                    string += " "
+                }
+                string += (value < 16 ? "0" : "") + String(value, radix: 16)
             }
-            string += (value < 16 ? "0" : "") + String(value, radix: 16)
+            return string
         }
-        return string
-    }
     #else
-    public func hexString(delimiter delimiter: Int = 0) -> String {
-        var string = ""
-        for (index, value) in self.enumerate() {
-            if delimiter != 0 && index > 0 && index % delimiter == 0 {
-                string += " "
+        public func hexadecimalString(inGroupsOf characterCount: Int = 0) -> String {
+            var string = ""
+            for (index, value) in self.enumerate() {
+                if characterCount != 0 && index > 0 && index % characterCount == 0 {
+                    string += " "
+                }
+                string += (value < 16 ? "0" : "") + String(value, radix: 16)
             }
-            string += (value < 16 ? "0" : "") + String(value, radix: 16)
+            return string
         }
-        return string
-    }
     #endif
 
-    public var hexDescription: String {
-        return hexString(delimiter: 2)
+    public var hexadecimalDescription: String {
+        return hexadecimalString(inGroupsOf: 2)
     }
 }
 
@@ -251,6 +251,6 @@ extension Data: CustomStringConvertible {
 
 extension Data: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return hexDescription
+        return hexadecimalDescription
     }
 }
