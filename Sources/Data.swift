@@ -199,11 +199,11 @@ extension Data {
     }
 
     #if swift(>=3.0)
-        public static func bufferWithSize(size: Int) -> Data {
+        public static func buffer(with size: Int) -> Data {
             return Data([UInt8](repeating: 0, count: size))
         }
     #else
-        public static func bufferWithSize(size: Int) -> Data {
+        public static func buffer(with size: Int) -> Data {
             return Data([UInt8](count: size, repeatedValue: 0))
         }
     #endif
