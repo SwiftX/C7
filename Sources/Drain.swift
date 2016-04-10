@@ -13,7 +13,7 @@ public final class Drain: DataRepresentable, Stream {
         self.init(for: [])
     }
 
-    public init(for stream: Stream, timingOut deadline: Double) {
+    public init(for stream: Stream, timingOut deadline: Double = .never) {
         var buffer: Data = []
 
         if stream.closed {
@@ -47,7 +47,7 @@ public final class Drain: DataRepresentable, Stream {
         return true
     }
 
-    public func receive(upTo byteCount: Int, timingOut deadline: Double) throws -> Data {
+    public func receive(upTo byteCount: Int, timingOut deadline: Double = .never) throws -> Data {
         if byteCount >= buffer.count {
             close()
             return buffer
@@ -59,11 +59,11 @@ public final class Drain: DataRepresentable, Stream {
         return Data(data)
     }
 
-    public func send(data: Data, timingOut deadline: Double) throws {
+    public func send(data: Data, timingOut deadline: Double = .never) throws {
         buffer += data.bytes
     }
 
-    public func flush(timingOut deadline: Double) throws {
+    public func flush(timingOut deadline: Double = .never) throws {
         buffer = []
     }
 }

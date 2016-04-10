@@ -3,7 +3,7 @@
         public let stream: Stream
         public let deadline: Double
 
-        public init(for stream: Stream, timingOut deadline: Double) {
+        public init(for stream: Stream, timingOut deadline: Double = .never) {
             self.stream = stream
             self.deadline = deadline
         }
@@ -22,7 +22,7 @@
         public let stream: Stream
         public let deadline: Double
 
-        public init(for stream: Stream, timingOut deadline: Double) {
+        public init(for stream: Stream, timingOut deadline: Double = .never) {
             self.stream = stream
             self.deadline = deadline
         }
