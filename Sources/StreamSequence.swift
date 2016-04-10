@@ -1,9 +1,9 @@
 #if swift(>=3.0)
     public final class StreamSequence: Sequence {
         public let stream: Stream
-        public let deadline: Int64
+        public let deadline: Double
 
-        public init(for stream: Stream, timingOut deadline: Int64) {
+        public init(for stream: Stream, timingOut deadline: Double) {
             self.stream = stream
             self.deadline = deadline
         }
@@ -20,9 +20,9 @@
 #else
     public final class StreamSequence: SequenceType {
         public let stream: Stream
-        public let deadline: Int64
+        public let deadline: Double
 
-        public init(for stream: Stream, timingOut deadline: Int64) {
+        public init(for stream: Stream, timingOut deadline: Double) {
             self.stream = stream
             self.deadline = deadline
         }

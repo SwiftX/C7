@@ -1,10 +1,10 @@
 public protocol AsyncSending {
-    func send(data: Data, timingOut deadline: Int64, result: (Void throws -> Void) -> Void)
-    func flush(timingOut deadline: Int64, result: (Void throws -> Void) -> Void)
+    func send(data: Data, timingOut deadline: Double, result: (Void throws -> Void) -> Void)
+    func flush(timingOut deadline: Double, result: (Void throws -> Void) -> Void)
 }
 
 public protocol AsyncReceiving {
-    func receive(upTo byteCount: Int, timingOut deadline: Int64, result: (Void throws -> Data) -> Void)
+    func receive(upTo byteCount: Int, timingOut deadline: Double, result: (Void throws -> Data) -> Void)
 }
 
 public protocol AsyncSendingStream: Closable, AsyncSending {}

@@ -1,26 +1,22 @@
 #if os(Linux)
     import Glibc
+    var ts = timespec()
 #else
     import Darwin.C
-    var mtid = mach_timebase_info_data_t()
+    var factor: Double = {
+        var mtid = mach_timebase_info_data_t()
+        mach_timebase_info(&mtid)
+        return Double(mtid.numer) / Double(mtid.denom) / 1E9
+    }()
 #endif
 
-/// Milliseconds from January 1, 1970.
+/// Absolute time in seconds
 public func now() -> Double {
     #if os(Linux)
-        var ts = timespec()
         clock_gettime(CLOCK_MONOTONIC, &ts)
-        let milliseconds = Int(ts.tv_sec) * 1000 + Int(ts.tv_nsec) / 1000000
-        // TODO: Paulo, make better :)
-        return Double(milliseconds) / 1000
+        return Double(ts.tv_sec) + Double(ts.tv_nsec) / 1E9
      #else
-        if mtid.denom == 0 {
-            mach_timebase_info(&mtid)
-        }
-        let ticks = mach_absolute_time()
-        let milliseconds = Int64(ticks * UInt64(mtid.numer) / UInt64(mtid.denom) / 1000000)
-        // TODO: Paulo, make better :)
-        return Double(milliseconds) / 1000
+        return Double(mach_absolute_time()) * factor
     #endif
 }
 
@@ -31,11 +27,11 @@ extension Double {
     }
 }
 
-public protocol TimeRepresentor {
+public protocol TimeUnitRepresentable {
     var seconds: Double { get }
 }
 
-extension TimeRepresentor {
+extension TimeUnitRepresentable {
     public var millisecond: Double {
         return 1.second * 1000
     }
@@ -59,9 +55,15 @@ extension TimeRepresentor {
     }
 }
 
-extension Double: TimeRepresentor {
+extension Double: TimeUnitRepresentable {
     public var seconds: Double {
         return self
+    }
+}
+
+extension Int: TimeUnitRepresentable {
+    public var seconds: Double {
+        return Double(self)
     }
 }
 
