@@ -33,22 +33,22 @@ public protocol TimeUnitRepresentable {
 
 extension TimeUnitRepresentable {
     public var millisecond: Double {
-        return 1.second * 1000
+        return self.seconds * 1000
     }
     public var milliseconds: Double {
         return self.seconds * 1000
     }
     public var second: Double {
-        return 1.seconds
+        return self.seconds
     }
     public var minute: Double {
-        return 1.second * 60
+        return self.second * 60
     }
     public var minutes: Double {
         return self.seconds * 60
     }
     public var hour: Double {
-        return 1.minute * 60
+        return self.minute * 60
     }
     public var hours: Double {
         return self.minutes * 60
