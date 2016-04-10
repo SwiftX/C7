@@ -123,11 +123,11 @@ public func == (lhs: Data, rhs: Data) -> Bool {
 #endif
 
 #if swift(>=3.0)
-    public func += (lhs: inout Data, rhs: DataConvertible) {
+    public func += (lhs: inout Data, rhs: DataRepresentable) {
         return lhs += rhs.data
     }
 #else
-    public func += (inout lhs: Data, rhs: DataConvertible) {
+    public func += (inout lhs: Data, rhs: DataRepresentable) {
         return lhs += rhs.data
     }
 #endif
@@ -138,12 +138,12 @@ public func + (lhs: Data, rhs: Data) -> Data {
 }
 
 @warn_unused_result
-public func + (lhs: Data, rhs: DataConvertible) -> Data {
+public func + (lhs: Data, rhs: DataRepresentable) -> Data {
     return lhs + rhs.data
 }
 
 @warn_unused_result
-public func + (lhs: DataConvertible, rhs: Data) -> Data {
+public func + (lhs: DataRepresentable, rhs: Data) -> Data {
     return lhs.data + rhs
 }
 
