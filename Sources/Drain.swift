@@ -39,17 +39,14 @@ public final class Drain: DataRepresentable, Stream {
         self.init(for: buffer.data)
     }
 
-    public func close() -> Bool {
-        if closed {
-            return false
-        }
+    public func close() throws {
+        guard !closed else { throw ClosableError.alreadyClosed }
         closed = true
-        return true
     }
 
     public func receive(upTo byteCount: Int, timingOut deadline: Double = .never) throws -> Data {
         if byteCount >= buffer.count {
-            close()
+            try close()
             return buffer
         }
 
