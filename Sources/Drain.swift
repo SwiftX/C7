@@ -40,7 +40,9 @@ public final class Drain: DataRepresentable, Stream {
     }
 
     public func close() throws {
-        guard !closed else { throw ClosableError.alreadyClosed }
+        guard !closed else {
+            throw ClosableError.alreadyClosed
+        }
         closed = true
     }
 
