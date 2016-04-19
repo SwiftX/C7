@@ -1,14 +1,14 @@
 #if swift(>=3.0)
-    public final class StreamSequence: Sequence {
-        public let stream: Stream
+    public final class StreamSequence<T: Stream>: Sequence {
+        public let stream: T
         public let deadline: Double
 
-        public init(for stream: Stream, timingOut deadline: Double = .never) {
+        public init(for stream: T, timingOut deadline: Double = .never) {
             self.stream = stream
             self.deadline = deadline
         }
 
-        public func makeIterator() -> AnyIterator<Data> {
+        public func makeIterator() -> AnyIterator<T.Interchanged> {
             return AnyIterator {
                 if self.stream.closed {
                     return nil

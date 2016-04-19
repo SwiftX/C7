@@ -1,4 +1,8 @@
-public final class Drain: DataRepresentable, Stream {
+public final class Drain: DataRepresentable, BinaryStream {
+    
+    public typealias Received = Data
+    public typealias Sent = Data
+    
     var buffer: Data
     public var closed = false
 
@@ -13,7 +17,7 @@ public final class Drain: DataRepresentable, Stream {
         self.init(for: [])
     }
 
-    public init(for stream: Stream, timingOut deadline: Double = .never) {
+    public init<T: BinaryStream>(for stream: T, timingOut deadline: Double = .never) {
         var buffer: Data = []
 
         if stream.closed {
