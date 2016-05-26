@@ -13,7 +13,6 @@ public enum JSON {
 }
 
 extension JSON.Number {
-    // TODO: We could make these public, but people might prefer not to.
     private var double: Double {
         switch self {
         case let .double(d):
@@ -27,7 +26,7 @@ extension JSON.Number {
 
     private var int: Int? {
         switch self {
-        case let .double(d):
+        case let .double(d) where d % 1 == 0:
             return Int(d)
         case let .integer(i):
             return i
@@ -37,12 +36,14 @@ extension JSON.Number {
             } else {
                 return nil
             }
+        default:
+            return nil
         }
     }
 
     private var uint: UInt? {
         switch self {
-        case let .double(d) where d >= 0:
+        case let .double(d) where d >= 0 && d % 1 == 0:
             return UInt(d)
         case let .integer(i) where i >= 0:
             return UInt(i)
