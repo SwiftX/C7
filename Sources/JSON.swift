@@ -12,13 +12,57 @@ public enum JSON {
     case null
 }
 
+extension JSON.Number {
+    // TODO: We could make these public, but people might prefer not to.
+    private var double: Double {
+        switch self {
+        case let .double(d):
+            return d
+        case let .integer(i):
+            return Double(i)
+        case let .unsignedInteger(u):
+            return Double(u)
+        }
+    }
+
+    private var int: Int? {
+        switch self {
+        case let .double(d):
+            return Int(d)
+        case let .integer(i):
+            return i
+        case let .unsignedInteger(u):
+            if u < UInt(Int.max) {
+                return Int(u)
+            } else {
+                return nil
+            }
+        }
+    }
+
+    private var uint: UInt? {
+        switch self {
+        case let .double(d) where d >= 0:
+            return UInt(d)
+        case let .integer(i) where i >= 0:
+            return UInt(i)
+        case let .unsignedInteger(u):
+            return u
+        default:
+            return nil
+        }
+    }
+}
+
 extension JSON.Number: Equatable { }
 public func ==(lhs: JSON.Number, rhs: JSON.Number) -> Bool {
-    switch (lhs, rhs) {
-    case (.integer(let l), .integer(let r)): return l == r
-    case (.unsignedInteger(let l), .unsignedInteger(let r)): return l == r
-    case (.double(let l), .double(let r)): return l == r
-    default: return false
+    switch lhs {
+    case .integer(let l):
+        return l == rhs.int
+    case .unsignedInteger(let l):
+        return l == rhs.uint
+    case .double(let l):
+        return l == rhs.double
     }
 }
 
