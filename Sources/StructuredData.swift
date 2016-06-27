@@ -2,8 +2,18 @@ public protocol StructuredDataInitializable {
     init(structuredData: StructuredData) throws
 }
 
-public protocol StructuredDataRepresentable {
+public protocol StructuredDataRepresentable: StructuredDataFallibleRepresentable {
     var structuredData: StructuredData { get }
+}
+
+public protocol StructuredDataFallibleRepresentable {
+    func asStructuredData() throws -> StructuredData
+}
+
+extension StructuredDataRepresentable {
+    public func asStructuredData() throws -> StructuredData {
+        return structuredData
+    }
 }
 
 public protocol StructuredDataConvertible: StructuredDataInitializable, StructuredDataRepresentable {}
