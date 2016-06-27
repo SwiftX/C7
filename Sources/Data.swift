@@ -152,17 +152,14 @@ public func == (lhs: Data, rhs: Data) -> Bool {
     }
 #endif
 
-@warn_unused_result
 public func + (lhs: Data, rhs: Data) -> Data {
     return Data(lhs.bytes + rhs.bytes)
 }
 
-@warn_unused_result
 public func + (lhs: Data, rhs: DataRepresentable) -> Data {
     return lhs + rhs.data
 }
 
-@warn_unused_result
 public func + (lhs: DataRepresentable, rhs: Data) -> Data {
     return lhs.data + rhs
 }
