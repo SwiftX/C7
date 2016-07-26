@@ -96,13 +96,13 @@ extension Data: RangeReplaceableCollection, MutableCollection {
     }
 }
 
-extension Data: ArrayLiteralConvertible {
+extension Data: ExpressibleByArrayLiteral {
     public init(arrayLiteral bytes: Byte...) {
         self.init(bytes)
     }
 }
 
-extension Data: StringLiteralConvertible {
+extension Data: ExpressibleByStringLiteral {
     public init(stringLiteral string: String) {
         self.init(string)
     }
@@ -167,7 +167,7 @@ public func + (lhs: DataRepresentable, rhs: Data) -> Data {
 extension String: DataConvertible {
     #if swift(>=3.0)
         public init(data: Data) throws {
-            struct Error: ErrorProtocol {}
+            struct StringError: Error {}
             var string = ""
             var decoder = UTF8()
             var generator = data.makeIterator()
@@ -176,7 +176,7 @@ extension String: DataConvertible {
                 switch decoder.decode(&generator) {
                 case .scalarValue(let char): string.append(char)
                 case .emptyInput: break loop
-                case .error: throw Error()
+                case .error: throw StringError()
                 }
             }
 
