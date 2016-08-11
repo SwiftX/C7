@@ -7,7 +7,7 @@ public struct Data {
 }
 
 public protocol DataInitializable {
-    init(data: Data) throws
+    init?(data: Data)
 }
 
 public protocol DataRepresentable {
@@ -166,8 +166,7 @@ public func + (lhs: DataRepresentable, rhs: Data) -> Data {
 
 extension String: DataConvertible {
     #if swift(>=3.0)
-        public init(data: Data) throws {
-            struct StringError: Error {}
+        public init?(data: Data) {
             var string = ""
             var decoder = UTF8()
             var generator = data.makeIterator()
@@ -176,15 +175,14 @@ extension String: DataConvertible {
                 switch decoder.decode(&generator) {
                 case .scalarValue(let char): string.unicodeScalars.append(char)
                 case .emptyInput: break loop
-                case .error: throw StringError()
+                case .error: return nil
                 }
             }
 
             self = string
         }
     #else
-        public init(data: Data) throws {
-            struct Error: ErrorProtocol {}
+        public init?(data: Data) {
             var string = ""
             var decoder = UTF8()
             var generator = data.generate()
@@ -193,7 +191,7 @@ extension String: DataConvertible {
                 switch decoder.decode(&generator) {
                 case .Result(let char): string.append(char)
                 case .EmptyInput: break loop
-                case .Error: throw Error()
+                case .Error: return nil
                 }
             }
 
@@ -258,7 +256,7 @@ extension Data {
 
 extension Data: CustomStringConvertible {
     public var description: String {
-        if let string = try? String(data: self) {
+        if let string = String(data: self) {
             return string
         }
 
