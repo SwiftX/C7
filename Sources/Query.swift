@@ -6,7 +6,7 @@ public struct Query {
     }
 }
 
-extension Query: DictionaryLiteralConvertible {
+extension Query: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (String, QueryField)...) {
         var fields: [String: QueryField] = [:]
 

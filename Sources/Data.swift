@@ -28,7 +28,7 @@ extension Data: RangeReplaceableCollection, MutableCollection {
     }
 
     #if swift(>=3.0)
-        public mutating func replaceSubrange<C : Collection where C.Iterator.Element == Byte>(_ subRange: Range<Int>, with newElements: C) {
+        public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == Byte {
             self.bytes.replaceSubrange(subRange, with: newElements)
         }
     #else
@@ -46,6 +46,10 @@ extension Data: RangeReplaceableCollection, MutableCollection {
             return bytes.generate()
         }
     #endif
+
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
 
     public var startIndex: Int {
         return bytes.startIndex
@@ -76,13 +80,13 @@ extension Data: RangeReplaceableCollection, MutableCollection {
     }
 }
 
-extension Data: ArrayLiteralConvertible {
+extension Data: ExpressibleByArrayLiteral {
     public init(arrayLiteral bytes: Byte...) {
         self.init(bytes)
     }
 }
 
-extension Data: StringLiteralConvertible {
+extension Data: ExpressibleByStringLiteral {
     public init(stringLiteral string: String) {
         self.init(string)
     }
@@ -103,7 +107,7 @@ public func == (lhs: Data, rhs: Data) -> Bool {
 }
 
 #if swift(>=3.0)
-    public func += <S : Sequence where S.Iterator.Element == Byte>(lhs: inout Data, rhs: S) {
+    public func += <S : Sequence>(lhs: inout Data, rhs: S) where S.Iterator.Element == Byte {
         return lhs.bytes += rhs
     }
 #else
@@ -132,17 +136,14 @@ public func == (lhs: Data, rhs: Data) -> Bool {
     }
 #endif
 
-@warn_unused_result
 public func + (lhs: Data, rhs: Data) -> Data {
     return Data(lhs.bytes + rhs.bytes)
 }
 
-@warn_unused_result
 public func + (lhs: Data, rhs: DataRepresentable) -> Data {
     return lhs + rhs.data
 }
 
-@warn_unused_result
 public func + (lhs: DataRepresentable, rhs: Data) -> Data {
     return lhs.data + rhs
 }
@@ -150,20 +151,20 @@ public func + (lhs: DataRepresentable, rhs: Data) -> Data {
 extension String: DataConvertible {
     #if swift(>=3.0)
         public init(data: Data) throws {
-            struct Error: ErrorProtocol {}
+            struct StringError: Error {}
             var string = ""
             var decoder = UTF8()
             var generator = data.makeIterator()
 
             loop: while true {
                 switch decoder.decode(&generator) {
-                case .scalarValue(let char): string.append(char)
+                case .scalarValue(let char): string.append(Character(char))
                 case .emptyInput: break loop
-                case .error: throw Error()
+                case .error: throw StringError()
                 }
             }
 
-            self.init(string)
+            self = string
         }
     #else
         public init(data: Data) throws {
@@ -190,11 +191,11 @@ extension String: DataConvertible {
 }
 
 extension Data {
-    public func withUnsafeBufferPointer<R>(@noescape body: (UnsafeBufferPointer<Byte>) throws -> R) rethrows -> R {
+    public func withUnsafeBufferPointer<R>(body: (UnsafeBufferPointer<Byte>) throws -> R) rethrows -> R {
         return try bytes.withUnsafeBufferPointer(body)
     }
 
-    public mutating func withUnsafeMutableBufferPointer<R>(@noescape body: (inout UnsafeMutableBufferPointer<Byte>) throws -> R) rethrows -> R {
+    public mutating func withUnsafeMutableBufferPointer<R>(body: (inout UnsafeMutableBufferPointer<Byte>) throws -> R) rethrows -> R {
        return try bytes.withUnsafeMutableBufferPointer(body)
     }
 

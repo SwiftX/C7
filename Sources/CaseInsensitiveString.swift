@@ -28,7 +28,7 @@ extension CaseInsensitiveString: Hashable {
     }
 #endif
 
-extension CaseInsensitiveString: StringLiteralConvertible {
+extension CaseInsensitiveString: ExpressibleByStringLiteral {
     public init(stringLiteral string: String) {
         self.init(string)
     }

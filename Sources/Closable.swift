@@ -3,6 +3,6 @@ public protocol Closable {
     func close() throws
 }
 
-public enum ClosableError: ErrorProtocol {
+public enum ClosableError: Error {
     case alreadyClosed
 }

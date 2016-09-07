@@ -18,7 +18,7 @@ extension QueryField: RangeReplaceableCollection, MutableCollection {
     }
 
     #if swift(>=3.0)
-        public mutating func replaceSubrange<C : Collection where C.Iterator.Element == String?>(_ subRange: Range<Int>, with newElements: C) {
+        public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == String? {
             self.values.replaceSubrange(subRange, with: newElements)
         }
     #else
@@ -45,6 +45,10 @@ extension QueryField: RangeReplaceableCollection, MutableCollection {
         return values.endIndex
     }
 
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+
     public subscript(index: Int) -> String? {
         get {
             return values[index]
@@ -66,19 +70,19 @@ extension QueryField: RangeReplaceableCollection, MutableCollection {
     }
 }
 
-extension QueryField: IntegerLiteralConvertible {
+extension QueryField: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: IntegerLiteralType) {
         self.init(String(value))
     }
 }
 
-extension QueryField: FloatLiteralConvertible {
+extension QueryField: ExpressibleByFloatLiteral {
     public init(floatLiteral value: FloatLiteralType) {
         self.init(String(value))
     }
 }
 
-extension QueryField: StringLiteralConvertible {
+extension QueryField: ExpressibleByStringLiteral {
     public init(stringLiteral string: String) {
         self.init(string)
     }
@@ -92,7 +96,7 @@ extension QueryField: StringLiteralConvertible {
     }
 }
 
-extension QueryField: ArrayLiteralConvertible {
+extension QueryField: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: String?...) {
         self.init(elements)
     }

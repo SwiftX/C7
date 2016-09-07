@@ -12,11 +12,11 @@ public protocol ReceivingStream: Closable, Receiving {}
 public protocol Stream: SendingStream, ReceivingStream {}
 
 extension Sending {
-    public func send(_ data: Data, timingOut deadline: Double, completion: (Void throws -> Void) -> Void) {
+    public func send(_ data: Data, timingOut deadline: Double, completion: ((Void) throws -> Void) -> Void) {
         completion { try self.send(data, timingOut: deadline) }
     }
 
-    public func flush(timingOut deadline: Double, completion: (Void throws -> Void) -> Void) {
+    public func flush(timingOut deadline: Double, completion: ((Void) throws -> Void) -> Void) {
         completion { try self.flush(timingOut: deadline) }
     }
 }
@@ -32,7 +32,7 @@ extension Sending {
 }
 
 extension Receiving {
-    public func receive(upTo byteCount: Int, timingOut deadline: Double, completion: (Void throws -> Data) -> Void) {
+    public func receive(upTo byteCount: Int, timingOut deadline: Double, completion: ((Void) throws -> Data) -> Void) {
         completion { try self.receive(upTo: byteCount, timingOut: deadline) }
     }
 }
