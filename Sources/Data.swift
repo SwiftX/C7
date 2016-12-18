@@ -28,6 +28,13 @@ extension Data {
     }
 }
 
+extension Data {
+    public init(start: UnsafePointer<Byte>, count: Int) {
+        let buffer = UnsafeBufferPointer(start: start, count: count);
+        self.bytes = Array(buffer)
+    }
+}
+
 extension Data: RangeReplaceableCollection, MutableCollection {
     public init() {
         self.init([])
